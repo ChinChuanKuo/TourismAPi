@@ -41,6 +41,10 @@ namespace tourismAPi.Models
                 {
                     return new statusModels() { showWarn = true, status = $"This Person is tool oldest on the {tr[data.i]} lines" };
                 }
+                if (birthday.Year > dateTime.Year)
+                {
+                    return new statusModels() { showWarn = true, status = $"This Person is from the future？" };
+                }
             }
             database database = new database();
             foreach (var item in dataitems)
