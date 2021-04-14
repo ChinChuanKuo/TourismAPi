@@ -36,8 +36,8 @@ namespace tourismAPi.Models
                 {
                     return new statusModels() { showWarn = true, status = $"Please enter the correct birthday on the {tr[data.i]} lines" };
                 }
-                DateTime days = DateTime.Parse(DateTime.ParseExact(data.item["birthday"].ToString().Trim(), "yyyyMMdd", CultureInfo.InvariantCulture).ToString("yyyy/MM/dd"));
-                if (dateTime.Year - days.Year > 150)
+                DateTime birthday = DateTime.Parse(DateTime.ParseExact(data.item["birthday"].ToString().Trim(), "yyyyMMdd", CultureInfo.InvariantCulture).ToString("yyyy/MM/dd"));
+                if (dateTime.Year - birthday.Year > 150)
                 {
                     return new statusModels() { showWarn = true, status = $"This Person is tool oldest on the {tr[data.i]} lines" };
                 }
@@ -45,6 +45,7 @@ namespace tourismAPi.Models
             database database = new database();
             foreach (var item in dataitems)
             {
+
                 List<dbparam> dbparamlist = new List<dbparam>();
                 dbparamlist.Add(new dbparam("@idcard", item["idcard"].ToString().Trim()));
                 if (database.checkActiveSql("mssql", "sysstring", "delete from web.tourism where idcard = @idcard;", dbparamlist) != "istrue")
@@ -56,7 +57,7 @@ namespace tourismAPi.Models
                 dbparamlist.Add(new dbparam("@birthday", item["birthday"].ToString().Trim()));
                 dbparamlist.Add(new dbparam("@traffic", traffic ? "搭車" : "自行前往"));
                 dbparamlist.Add(new dbparam("@location", traffic ? location ? "內湖" : "林口" : ""));
-                dbparamlist.Add(new dbparam("@ago", "0"));
+                dbparamlist.Add(new dbparam("@ago", dateTime.Year - DateTime.Parse(DateTime.ParseExact(item["birthday"].ToString().Trim(), "yyyyMMdd", CultureInfo.InvariantCulture).ToString("yyyy/MM/dd")).Year));
                 dbparamlist.Add(new dbparam("@money", traffic ? "0" : "-200"));
                 if (database.checkActiveSql("mssql", "sysstring", "exec web.inserttourismitem @userid,@username,@idcard,@birthday,@traffic,@location,@ago,@money;", dbparamlist) != "istrue")
                 {
