@@ -10,7 +10,7 @@ namespace tourismAPi.Models
 {
     public class InsertClass
     {
-        public statusModels GetSendModels(bool traffic, bool location, string items, string cuurip)
+        public statusModels GetSendModels(string categoryId, bool traffic, bool location, string items, string cuurip)
         {
             DateTime dateTime = DateTime.Now;
             string[] tr = { "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen" };
@@ -59,6 +59,7 @@ namespace tourismAPi.Models
                 dbparamlist.Add(new dbparam("@userid", item["userid"].ToString().Trim()));
                 dbparamlist.Add(new dbparam("@username", item["username"].ToString().Trim()));
                 dbparamlist.Add(new dbparam("@birthday", item["birthday"].ToString().Trim()));
+                dbparamlist.Add(new dbparam("@category", categoryId));
                 dbparamlist.Add(new dbparam("@traffic", traffic ? "搭車" : "自行前往"));
                 dbparamlist.Add(new dbparam("@location", traffic ? location ? "內湖" : "林口" : ""));
                 dbparamlist.Add(new dbparam("@ago", dateTime.Year - DateTime.Parse(DateTime.ParseExact(item["birthday"].ToString().Trim(), "yyyyMMdd", CultureInfo.InvariantCulture).ToString("yyyy/MM/dd")).Year));
