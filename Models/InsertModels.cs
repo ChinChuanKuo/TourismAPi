@@ -65,7 +65,7 @@ namespace tourismAPi.Models
                 dbparamlist.Add(new dbparam("@location", traffic ? location ? "內湖" : "林口" : ""));
                 dbparamlist.Add(new dbparam("@ago", dateTime.Year - DateTime.Parse(DateTime.ParseExact(item["birthday"].ToString().Trim(), "yyyyMMdd", CultureInfo.InvariantCulture).ToString("yyyy/MM/dd")).Year));
                 dbparamlist.Add(new dbparam("@money", traffic ? "0" : "-200"));
-                if (database.checkActiveSql("mssql", "sysstring", "exec web.inserttourismitem @userid,@username,@idcard,@birthday,@traffic,@location,@ago,@money;", dbparamlist) != "istrue")
+                if (database.checkActiveSql("mssql", "sysstring", "exec web.inserttourismitem @userid,@username,@idcard,@birthday,@category,@traffic,@location,@ago,@money;", dbparamlist) != "istrue")
                 {
                     return new statusModels() { showWarn = true, status = "Please contact the engineer" };
                 }
