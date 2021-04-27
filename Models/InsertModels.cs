@@ -58,7 +58,6 @@ namespace tourismAPi.Models
                 }
                 dbparamlist.Add(new dbparam("@userid", item["userid"].ToString().Trim()));
                 dbparamlist.Add(new dbparam("@username", item["username"].ToString().Trim()));
-                dbparamlist.Add(new dbparam("@idcard", item["idcard"].ToString().Trim()));
                 dbparamlist.Add(new dbparam("@birthday", item["birthday"].ToString().Trim()));
                 dbparamlist.Add(new dbparam("@category", categoryId));
                 dbparamlist.Add(new dbparam("@traffic", traffic ? "搭車" : "自行前往"));
