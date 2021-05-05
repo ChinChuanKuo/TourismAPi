@@ -14,7 +14,7 @@ namespace tourismAPi.Models
         {
             DateTime dateTime = DateTime.Now;
             string[] tr = { "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen" };
-            var dataitems = JsonSerializer.Deserialize<List<Dictionary<string, object>>>(items);
+            var dataitems = JsonSerializer.Deserialize<List<Dictionary<string, object>>>(items).OrderBy(e => e["birthday"].ToString().TrimEnd());
             foreach (var data in dataitems.Select((item, i) => new { i, item }))
             {
                 if (data.item["userid"].ToString().Trim().Length > 0)
@@ -47,13 +47,12 @@ namespace tourismAPi.Models
                 }
             }
             int i = 0;
-            database database = new database();
             foreach (var item in dataitems)
             {
 
                 List<dbparam> dbparamlist = new List<dbparam>();
                 dbparamlist.Add(new dbparam("@idcard", item["idcard"].ToString().Trim()));
-                if (database.checkActiveSql("mssql", "sysstring", "delete from web.tourism where idcard = @idcard;", dbparamlist) != "istrue")
+                if (new database().checkActiveSql("mssql", "sysstring", "delete from web.tourism where idcard = @idcard;", dbparamlist) != "istrue")
                 {
                     return new statusModels() { showWarn = true, status = "Please contact the engineer" };
                 }
@@ -65,7 +64,7 @@ namespace tourismAPi.Models
                 dbparamlist.Add(new dbparam("@location", traffic ? location ? "內湖" : "林口" : ""));
                 dbparamlist.Add(new dbparam("@ago", dateTime.Year - DateTime.Parse(DateTime.ParseExact(item["birthday"].ToString().Trim(), "yyyyMMdd", CultureInfo.InvariantCulture).ToString("yyyy/MM/dd")).Year));
                 dbparamlist.Add(new dbparam("@money", new MoneyClass().checkOffice(item["userid"].ToString().Trim()) ? traffic ? 0 : -200 : new MoneyClass().checkMoney(categoryId, i, traffic, bool.Parse(item["showPlace"].ToString().TrimEnd()), item["birthday"].ToString().Trim())));
-                if (database.checkActiveSql("mssql", "sysstring", "exec web.inserttourismitem @userid,@username,@idcard,@birthday,@category,@traffic,@location,@ago,@money;", dbparamlist) != "istrue")
+                if (new database().checkActiveSql("mssql", "sysstring", "exec web.inserttourismitem @userid,@username,@idcard,@birthday,@category,@traffic,@location,@ago,@money;", dbparamlist) != "istrue")
                 {
                     return new statusModels() { showWarn = true, status = "Please contact the engineer" };
                 }

@@ -14,7 +14,8 @@ namespace tourismAPi.Models
         {
             int total = 0;
             bool showTraffic = bool.Parse(traffic);
-            foreach (var item in JsonSerializer.Deserialize<List<Dictionary<string, object>>>(items).Select((value, i) => new { i, value }))
+            var orditems = JsonSerializer.Deserialize<List<Dictionary<string, object>>>(items).OrderBy(e => e["birthday"].ToString().TrimEnd());
+            foreach (var item in orditems.Select((value, i) => new { i, value }))
             {
                 bool showPlace = bool.Parse(item.value["showPlace"].ToString().Trim());
                 int money = checkMoney(categoryId, item.i, showTraffic, showPlace, item.value["birthday"].ToString().Trim());
