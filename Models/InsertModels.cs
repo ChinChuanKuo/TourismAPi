@@ -46,6 +46,7 @@ namespace tourismAPi.Models
                     return new statusModels() { showWarn = true, status = $"This Person is from the future？" };
                 }
             }
+            int i = 0;
             database database = new database();
             foreach (var item in dataitems)
             {
@@ -63,11 +64,12 @@ namespace tourismAPi.Models
                 dbparamlist.Add(new dbparam("@traffic", traffic ? "搭車" : "自行前往"));
                 dbparamlist.Add(new dbparam("@location", traffic ? location ? "內湖" : "林口" : ""));
                 dbparamlist.Add(new dbparam("@ago", dateTime.Year - DateTime.Parse(DateTime.ParseExact(item["birthday"].ToString().Trim(), "yyyyMMdd", CultureInfo.InvariantCulture).ToString("yyyy/MM/dd")).Year));
-                dbparamlist.Add(new dbparam("@money", new MoneyClass().checkOffice(item["userid"].ToString().Trim()) ? traffic ? 0 : -200 : new MoneyClass().checkMoney(categoryId, traffic, bool.Parse(item["showPlace"].ToString().TrimEnd()), item["birthday"].ToString().Trim())));
+                dbparamlist.Add(new dbparam("@money", new MoneyClass().checkOffice(item["userid"].ToString().Trim()) ? traffic ? 0 : -200 : new MoneyClass().checkMoney(categoryId, i, traffic, bool.Parse(item["showPlace"].ToString().TrimEnd()), item["birthday"].ToString().Trim())));
                 if (database.checkActiveSql("mssql", "sysstring", "exec web.inserttourismitem @userid,@username,@idcard,@birthday,@category,@traffic,@location,@ago,@money;", dbparamlist) != "istrue")
                 {
                     return new statusModels() { showWarn = true, status = "Please contact the engineer" };
                 }
+                i++;
             }
             return new statusModels() { showWarn = false, status = "Congratulations, Information Has Been Updated" };
         }
