@@ -35,6 +35,13 @@ namespace tourismAPi.App_Code
             }
         }
 
+        public int differentday(DateTime afterDate, DateTime beforeDate)
+        {
+            int ago = afterDate.Year - beforeDate.Year;
+            if (beforeDate > afterDate.AddYears(-ago)) return ago;
+            return ago;
+        }
+
         public string differentime(string beforedate)
         {
             DateTime beforeDate = DateTime.Parse(beforedate), nowDate = DateTime.Now;

@@ -36,6 +36,8 @@ namespace tourismAPi
                     builder => builder.WithOrigins(items[0], items[1], items[2], items[3], items[4]).WithHeaders("Accept").WithMethods("GET"));
                 options.AddPolicy("Insert",
                     builder => builder.WithOrigins(items[0], items[1], items[2], items[3], items[4]).WithHeaders("Accept").WithMethods("POST"));
+                options.AddPolicy("Group",
+                    builder => builder.WithOrigins(items[0], items[1], items[2], items[3], items[4]).WithHeaders("Accept").WithMethods("POST"));
                 options.AddPolicy("WeatherForecast",
                     builder => builder.WithOrigins(items[0], items[1], items[2], items[3], items[4]).WithHeaders("Accept").WithMethods("GET", "POST"));
             });

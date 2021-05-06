@@ -12,27 +12,29 @@ namespace tourismAPi.Models
     {
         public string GetSearchModels(string categoryId, string traffic, string items, string cuurip)
         {
-            int total = 0;
-            bool showTraffic = bool.Parse(traffic);
-            var orditems = JsonSerializer.Deserialize<List<Dictionary<string, object>>>(items).OrderBy(e => e["birthday"].ToString().TrimEnd());
-            foreach (var item in orditems.Select((value, i) => new { i, value }))
+            int count = 0, total = 0;
+            List<Dictionary<string, object>> familyitems = new List<Dictionary<string, object>>();
+            foreach (var item in JsonSerializer.Deserialize<List<Dictionary<string, object>>>(items))
             {
-                bool showPlace = bool.Parse(item.value["showPlace"].ToString().Trim());
-                int money = checkMoney(categoryId, item.i, showTraffic, showPlace, item.value["birthday"].ToString().Trim());
-                switch (item.value["userid"].ToString().Trim())
+                switch (checkOffice(item["userid"].ToString().Trim()))
                 {
-                    case "":
-                        total += money < 0 ? 0 : money;
+                    case true:
+                        count++;
+                        //officeitems.Add(new Dictionary<string, object>() { { "birthday", item["birthday"].ToString().TrimEnd() }, { "showPlace", item["showPlace"].ToString().TrimEnd() } });
                         break;
                     default:
-                        switch (checkOffice(item.value["userid"].ToString().Trim()))
-                        {
-                            case false:
-                                total += money < 0 ? 0 : money;
-                                break;
-                        }
+                        familyitems.Add(new Dictionary<string, object>() { { "birthday", item["birthday"].ToString().TrimEnd() }, { "showPlace", item["showPlace"].ToString().TrimEnd() } });
                         break;
                 }
+            }
+            bool showTraffic = bool.Parse(traffic);
+            var orditems = familyitems.OrderBy(e => e["birthday"].ToString().TrimEnd());
+            foreach (var item in orditems)
+            {
+                bool showPlace = bool.Parse(item["showPlace"].ToString().Trim());
+                int money = checkMoney(categoryId, count, showTraffic, showPlace, item["birthday"].ToString().Trim());
+                total += money < 0 ? 0 : money;
+                count++;
             }
             return total.ToString().Trim();
         }
@@ -47,11 +49,11 @@ namespace tourismAPi.Models
 
         public int checkMoney(string categoryId, int count, bool traffic, bool place, string day)
         {
-            if (!Regex.IsMatch(day, @"^[0-9]+$") || day.Length != 8) {
+            if (!Regex.IsMatch(day, @"^[0-9]+$") || day.Length != 8)
+            {
                 return 0;
             }
-            DateTime nowDate = DateTime.Now, birthday = DateTime.Parse(DateTime.ParseExact(day.ToString().Trim(), "yyyyMMdd", CultureInfo.InvariantCulture).ToString("yyyy/MM/dd"));
-            int year = nowDate.Year - birthday.Year;
+            int year = new datetime().differentday(DateTime.Parse("2021/06/18"), DateTime.Parse(DateTime.ParseExact(day.ToString().Trim(), "yyyyMMdd", CultureInfo.InvariantCulture).ToString("yyyy/MM/dd")));
             if (year >= 12)
             {
                 switch (categoryId)
@@ -70,7 +72,7 @@ namespace tourismAPi.Models
                         switch (traffic)
                         {
                             case true:
-                                return 200;
+                                return 220;
                             default:
                                 return -300;
                         }
@@ -101,7 +103,7 @@ namespace tourismAPi.Models
                         switch (traffic)
                         {
                             case true:
-                                return 200;
+                                return 220;
                             default:
                                 return -300;
                         }
