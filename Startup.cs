@@ -32,6 +32,8 @@ namespace tourismAPi
             {
                 options.AddPolicy("Client",
                     builder => builder.WithOrigins(items[0], items[1], items[2], items[3], items[4]).WithHeaders("Accept").WithMethods("GET"));
+                options.AddPolicy("Birthday",
+                    builder => builder.WithOrigins(items[0], items[1], items[2], items[3], items[4]).WithHeaders("Accept").WithMethods("GET"));
                 options.AddPolicy("Money",
                     builder => builder.WithOrigins(items[0], items[1], items[2], items[3], items[4]).WithHeaders("Accept").WithMethods("GET"));
                 options.AddPolicy("Insert",

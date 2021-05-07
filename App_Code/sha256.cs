@@ -23,9 +23,8 @@ namespace tourismAPi.App_Code
                     return database.selectMsSql(database.connectionString(sqlstring), "select NEWID();", dbparamlist).Rows[0][0].ToString().TrimEnd();
                 case "postgresql":
                     return database.selectPostgreSql(database.connectionString(sqlstring), "select uuid_generate_v4();", dbparamlist).Rows[0][0].ToString().TrimEnd();
-                default:
-                    return null;
             }
+            return null;
         }
     }
 }

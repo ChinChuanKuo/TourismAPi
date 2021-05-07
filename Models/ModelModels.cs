@@ -11,6 +11,7 @@ namespace tourismAPi.Models
 
     public class statusModels
     {
+        public string license { get; set; }
         public bool showWarn { get; set; }
         public string status { get; set; }
     }

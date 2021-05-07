@@ -154,7 +154,7 @@ namespace tourismAPi.Models
                     database.checkActiveSql("mssql", "mailstring", "insert into dbo.MailBox (mAddrName,mAddrBCCName,mSubject,mBody) values (@mAddrName,@mAddrBCCName,@mSubject,@mBody);", dbparamlist);
                     break;
             }
-            return new statusModels() { showWarn = false, status = "Congratulations, Information Has Been Updated" };
+            return new statusModels() { license = mainRows.Rows[0]["groupid"].ToString().Trim(), showWarn = false, status = "Congratulations, Information Has Been Updated" };
         }
     }
 }
