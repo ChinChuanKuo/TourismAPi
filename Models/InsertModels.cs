@@ -31,10 +31,10 @@ namespace tourismAPi.Models
                 switch (new MoneyClass().checkOffice(data.item["userid"].ToString().Trim()))
                 {
                     case true:
-                        officeitems.Add(new Dictionary<string, object>() { { "userid", data.item["userid"].ToString().Trim() }, { "username", data.item["username"].ToString().Trim() }, { "idcard", data.item["idcard"].ToString().Trim() }, { "birthday", data.item["birthday"].ToString().Trim() }, { "showPlace", data.item["showPlace"].ToString().Trim() } });
+                        officeitems.Add(new Dictionary<string, object>() { { "userid", data.item["userid"].ToString().Trim() }, { "username", data.item["username"].ToString().Trim() }, { "idcard", data.item["idcard"].ToString().Trim() }, { "birthday", data.item["birthday"].ToString().Trim() }, { "showGender", data.item["showGender"].ToString().TrimEnd() }, { "showPlace", data.item["showPlace"].ToString().Trim() } });
                         break;
                     default:
-                        familyitems.Add(new Dictionary<string, object>() { { "username", data.item["username"].ToString().Trim() }, { "idcard", data.item["idcard"].ToString().Trim() }, { "birthday", data.item["birthday"].ToString().Trim() }, { "showPlace", data.item["showPlace"].ToString().Trim() } });
+                        familyitems.Add(new Dictionary<string, object>() { { "username", data.item["username"].ToString().Trim() }, { "idcard", data.item["idcard"].ToString().Trim() }, { "birthday", data.item["birthday"].ToString().Trim() }, { "showGender", data.item["showGender"].ToString().TrimEnd() }, { "showPlace", data.item["showPlace"].ToString().Trim() } });
                         break;
                 }
             }
@@ -60,6 +60,7 @@ namespace tourismAPi.Models
                         dbparamlist.Add(new dbparam("@username", item["username"].ToString().Trim()));
                         dbparamlist.Add(new dbparam("@idcard", item["idcard"].ToString().Trim()));
                         dbparamlist.Add(new dbparam("@birthday", item["birthday"].ToString().Trim()));
+                        dbparamlist.Add(new dbparam("@gender", bool.Parse(item["showGender"].ToString().Trim()) ? "1" : "0"));
                         dbparamlist.Add(new dbparam("@place", "1"));
                         dbparamlist.Add(new dbparam("@category", categoryId));
                         dbparamlist.Add(new dbparam("@traffic", traffic ? "搭車" : "自行前往"));
@@ -68,7 +69,7 @@ namespace tourismAPi.Models
                         dbparamlist.Add(new dbparam("@money", categoryId == "0" ? traffic ? 0 : -200 : traffic ? -400 : -500));
                         dbparamlist.Add(new dbparam("@indate", mainRows.Rows[0]["indate"].ToString().Trim()));
                         dbparamlist.Add(new dbparam("@intime", mainRows.Rows[0]["intime"].ToString().Trim()));
-                        if (new database().checkActiveSql("mssql", "sysstring", "exec web.inserttourismitem @groupid,@userid,@username,@idcard,@birthday,@place,@category,@traffic,@location,@ago,@money;", dbparamlist) != "istrue")
+                        if (new database().checkActiveSql("mssql", "sysstring", "exec web.inserttourismitem @groupid,@userid,@username,@idcard,@birthday,@gender,@place,@category,@traffic,@location,@ago,@money;", dbparamlist) != "istrue")
                         {
                             return new statusModels() { showWarn = true, status = "Please contact the engineer" };
                         }
@@ -86,6 +87,7 @@ namespace tourismAPi.Models
                         dbparamlist.Add(new dbparam("@username", item["username"].ToString().Trim()));
                         dbparamlist.Add(new dbparam("@idcard", item["idcard"].ToString().Trim()));
                         dbparamlist.Add(new dbparam("@birthday", item["birthday"].ToString().Trim()));
+                        dbparamlist.Add(new dbparam("@gender", bool.Parse(item["showGender"].ToString().Trim()) ? "1" : "0"));
                         dbparamlist.Add(new dbparam("@place", ago < 3 ? traffic ? showPlace ? "1" : "0" : "1" : "1"));
                         dbparamlist.Add(new dbparam("@category", categoryId));
                         dbparamlist.Add(new dbparam("@traffic", traffic ? "搭車" : "自行前往"));
@@ -94,7 +96,7 @@ namespace tourismAPi.Models
                         dbparamlist.Add(new dbparam("@money", new MoneyClass().checkMoney(categoryId, i, traffic, showPlace, item["birthday"].ToString().Trim())));
                         dbparamlist.Add(new dbparam("@indate", mainRows.Rows[0]["indate"].ToString().Trim()));
                         dbparamlist.Add(new dbparam("@intime", mainRows.Rows[0]["intime"].ToString().Trim()));
-                        if (new database().checkActiveSql("mssql", "sysstring", "exec web.inserttourismitem @groupid,@userid,@username,@idcard,@birthday,@place,@category,@traffic,@location,@ago,@money;", dbparamlist) != "istrue")
+                        if (new database().checkActiveSql("mssql", "sysstring", "exec web.inserttourismitem @groupid,@userid,@username,@idcard,@birthday,@gender,@place,@category,@traffic,@location,@ago,@money;", dbparamlist) != "istrue")
                         {
                             return new statusModels() { showWarn = true, status = "Please contact the engineer" };
                         }
@@ -110,13 +112,14 @@ namespace tourismAPi.Models
                         dbparamlist.Add(new dbparam("@username", item["username"].ToString().Trim()));
                         dbparamlist.Add(new dbparam("@idcard", item["idcard"].ToString().Trim()));
                         dbparamlist.Add(new dbparam("@birthday", item["birthday"].ToString().Trim()));
+                        dbparamlist.Add(new dbparam("@gender", bool.Parse(item["showGender"].ToString().Trim()) ? "1" : "0"));
                         dbparamlist.Add(new dbparam("@place", "1"));
                         dbparamlist.Add(new dbparam("@category", categoryId));
                         dbparamlist.Add(new dbparam("@traffic", traffic ? "搭車" : "自行前往"));
                         dbparamlist.Add(new dbparam("@location", traffic ? location ? "內湖" : "林口" : ""));
                         dbparamlist.Add(new dbparam("@ago", new datetime().differentday(DateTime.Parse("2021/06/18"), DateTime.Parse(DateTime.ParseExact(item["birthday"].ToString().Trim(), "yyyyMMdd", CultureInfo.InvariantCulture).ToString("yyyy/MM/dd")))));
                         dbparamlist.Add(new dbparam("@money", categoryId == "0" ? traffic ? 0 : -200 : traffic ? -400 : -500));
-                        if (new database().checkActiveSql("mssql", "sysstring", "exec web.inserttourismitem @groupid,@userid,@username,@idcard,@birthday,@place,@category,@traffic,@location,@ago,@money;", dbparamlist) != "istrue")
+                        if (new database().checkActiveSql("mssql", "sysstring", "exec web.inserttourismitem @groupid,@userid,@username,@idcard,@birthday,@gender,@place,@category,@traffic,@location,@ago,@money;", dbparamlist) != "istrue")
                         {
                             return new statusModels() { showWarn = true, status = "Please contact the engineer" };
                         }
@@ -134,13 +137,14 @@ namespace tourismAPi.Models
                         dbparamlist.Add(new dbparam("@username", item["username"].ToString().Trim()));
                         dbparamlist.Add(new dbparam("@idcard", item["idcard"].ToString().Trim()));
                         dbparamlist.Add(new dbparam("@birthday", item["birthday"].ToString().Trim()));
+                        dbparamlist.Add(new dbparam("@gender", bool.Parse(item["showGender"].ToString().Trim()) ? "1" : "0"));
                         dbparamlist.Add(new dbparam("@place", ago < 3 ? traffic ? showPlace ? "1" : "0" : "1" : "1"));
                         dbparamlist.Add(new dbparam("@category", categoryId));
                         dbparamlist.Add(new dbparam("@traffic", traffic ? "搭車" : "自行前往"));
                         dbparamlist.Add(new dbparam("@location", traffic ? location ? "內湖" : "林口" : ""));
                         dbparamlist.Add(new dbparam("@ago", new datetime().differentday(DateTime.Parse("2021/06/18"), DateTime.Parse(DateTime.ParseExact(item["birthday"].ToString().Trim(), "yyyyMMdd", CultureInfo.InvariantCulture).ToString("yyyy/MM/dd")))));
                         dbparamlist.Add(new dbparam("@money", new MoneyClass().checkMoney(categoryId, i, traffic, showPlace, item["birthday"].ToString().Trim())));
-                        if (new database().checkActiveSql("mssql", "sysstring", "exec web.inserttourismitem @groupid,@userid,@username,@idcard,@birthday,@place,@category,@traffic,@location,@ago,@money;", dbparamlist) != "istrue")
+                        if (new database().checkActiveSql("mssql", "sysstring", "exec web.inserttourismitem @groupid,@userid,@username,@idcard,@birthday,@gender,@place,@category,@traffic,@location,@ago,@money;", dbparamlist) != "istrue")
                         {
                             return new statusModels() { showWarn = true, status = "Please contact the engineer" };
                         }
@@ -148,7 +152,6 @@ namespace tourismAPi.Models
                     }
                     break;
             }
-            System.Console.WriteLine(string.Join(',', offices));
             switch (mainRows.Rows[0]["issafe"].ToString().Trim())
             {
                 case "0":
