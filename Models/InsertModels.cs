@@ -135,7 +135,7 @@ namespace tourismAPi.Models
                         dbparamlist.Add(new dbparam("@location", traffic ? location ? "內湖" : "林口" : ""));
                         dbparamlist.Add(new dbparam("@ago", new datetime().differentday(DateTime.Parse("2021/06/18"), DateTime.Parse(DateTime.ParseExact(item["birthday"].ToString().Trim(), "yyyyMMdd", CultureInfo.InvariantCulture).ToString("yyyy/MM/dd")))));
                         dbparamlist.Add(new dbparam("@money", new MoneyClass().checkMoney(categoryId, i, traffic, showPlace, item["birthday"].ToString().Trim())));
-                        if (new database().checkActiveSql("mssql", "sysstring", "exec web.inserttourismitem @groupid,@userid,@username,@idcard,@birthday,@category,@traffic,@location,@ago,@money;", dbparamlist) != "istrue")
+                        if (new database().checkActiveSql("mssql", "sysstring", "exec web.inserttourismitem @groupid,@userid,@username,@idcard,@birthday,@place,@category,@traffic,@location,@ago,@money;", dbparamlist) != "istrue")
                         {
                             return new statusModels() { showWarn = true, status = "Please contact the engineer" };
                         }
@@ -143,6 +143,7 @@ namespace tourismAPi.Models
                     }
                     break;
             }
+            System.Console.WriteLine(string.Join(',', offices));
             switch (mainRows.Rows[0]["issafe"].ToString().Trim())
             {
                 case "0":
