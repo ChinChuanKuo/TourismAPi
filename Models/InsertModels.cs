@@ -14,8 +14,13 @@ namespace tourismAPi.Models
         public statusModels GetSendModels(string categoryId, bool traffic, bool location, string items, string cuurip)
         {
             string[] tr = { "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen" };
+            var dataitems = JsonSerializer.Deserialize<List<Dictionary<string, object>>>(items);
+            if (string.IsNullOrWhiteSpace(dataitems[0]["userid"].ToString().Trim()))
+            {
+                return new statusModels() { showWarn = true, status = $"Please enter the office id on the {tr[0]} lines" };
+            }
             List<Dictionary<string, object>> officeitems = new List<Dictionary<string, object>>(), familyitems = new List<Dictionary<string, object>>();
-            foreach (var data in JsonSerializer.Deserialize<List<Dictionary<string, object>>>(items).Select((item, i) => new { i, item }))
+            foreach (var data in dataitems.Select((item, i) => new { i, item }))
             {
                 if (data.item["username"].ToString().Trim().Length == 0) return new statusModels() { showWarn = true, status = $"Please enter the correct name on the {tr[data.i]} lines" };
                 if (!Regex.IsMatch(data.item["idcard"].ToString().Trim(), @"^([a-zA-Z]+\d+|\d+[a-zA-Z]+)[a-zA-Z0-9]*$") || data.item["idcard"].ToString().Trim().Length == 0) return new statusModels() { showWarn = true, status = $"Please enter the correct id card on the {tr[data.i]} lines" };
@@ -32,10 +37,6 @@ namespace tourismAPi.Models
                         familyitems.Add(new Dictionary<string, object>() { { "username", data.item["username"].ToString().Trim() }, { "idcard", data.item["idcard"].ToString().Trim() }, { "birthday", data.item["birthday"].ToString().Trim() }, { "showPlace", data.item["showPlace"].ToString().Trim() } });
                         break;
                 }
-            }
-            if (string.IsNullOrWhiteSpace(officeitems[0]["userid"].ToString().Trim()))
-            {
-                return new statusModels() { showWarn = true, status = $"Please enter the office id on the {tr[0]} lines" };
             }
             database database = new database();
             DataTable mainRows = new DataTable();
