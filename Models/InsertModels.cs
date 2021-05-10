@@ -33,6 +33,10 @@ namespace tourismAPi.Models
                         break;
                 }
             }
+            if (string.IsNullOrWhiteSpace(officeitems[0]["userid"].ToString().Trim()))
+            {
+                return new statusModels() { showWarn = true, status = $"Please enter the office id on the {tr[0]} lines" };
+            }
             database database = new database();
             DataTable mainRows = new DataTable();
             List<dbparam> dbparamlist = new List<dbparam>();
@@ -151,7 +155,7 @@ namespace tourismAPi.Models
                     dbparamlist.Add(new dbparam("@mAddrName", string.Join(',', offices)));
                     dbparamlist.Add(new dbparam("@mAddrBCCName", "郭晉全"));
                     dbparamlist.Add(new dbparam("@mSubject", "旅遊報名更新序號"));
-                    dbparamlist.Add(new dbparam("@mBody", $"<div style='width: 300px;text-align:center;'><div style='padding: 12px; border:2px solid white;'><div><h3 style='color: red;'>FN SYSTEM NEWS</h3></div><div> <hr /></div><div><h3 style='color: red;'>旅遊報名更新序號</h3></div><div style='font-size: 16px;'>{new datetime().sqldate("mssql", "sysstring")} {new datetime().sqltime("mssql", "sysstring")}</div><div><h4>請勿遺失此更新序號</h4></div><div>更新序號：{mainRows.Rows[0]["groupid"].ToString().Trim()}</div></div></div>"));
+                    dbparamlist.Add(new dbparam("@mBody", $"<div style='width: 300px;text-align:center;'><div style='padding: 12px; border:2px solid white;'><div><h3 style='color: red;'>FN SYSTEM NEWS</h3></div><div> <hr /></div><div><a href='http://221.222.222.16:4500/tourism/2021money.pdf' style='color: red;'>旅遊金額對應表</a></div><div><h3 style='color: red;'>旅遊報名更新序號</h3></div><div style='font-size: 16px;'>{new datetime().sqldate("mssql", "sysstring")} {new datetime().sqltime("mssql", "sysstring")}</div><div><h4>請勿遺失此更新序號</h4></div><div>更新序號：{mainRows.Rows[0]["groupid"].ToString().Trim()}</div></div></div>"));
                     database.checkActiveSql("mssql", "mailstring", "insert into dbo.MailBox (mAddrName,mAddrBCCName,mSubject,mBody) values (@mAddrName,@mAddrBCCName,@mSubject,@mBody);", dbparamlist);
                     break;
             }
